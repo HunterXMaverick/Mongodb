@@ -25,4 +25,7 @@ api.delete('/usuario_borrar/:id', usuarioControl.borrarOne)
 api.put('/usuario_actual/:id', usuarioControl.updateUser)
 api.put('/usuario_actuales', usuarioControl.updateUsers)
 
+
+api.post('/nuevo_usuario', usuarioControl.nuevoUsuario)
+
 module.exports = api

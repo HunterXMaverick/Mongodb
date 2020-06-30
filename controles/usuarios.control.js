@@ -2,7 +2,11 @@
 'use strict'
 
 const connectDb = require('../config/db'),
-    fs = require('fs')
+    fs = require('fs'),
+    bcrypt = require('bcrypt')
+const passport = require('passport')
+const { RSA_NO_PADDING } = require('constants')
+jwt = require('jsonwebtoken')
 
 
 let prueba = (req, res) => {
@@ -249,6 +253,70 @@ let updateUsers = async (req, res) => {
     })
 
 }
+
+let nuevoUsuario = async (req, res) => {
+    let usuario = req.body.usuario
+
+    if (!usuario.passw || usuario.passw == '') {
+        res.status(200).send('usuario o password invalido')
+    } else {
+        let passwordEncriptado = bcrypt.hashSync(usuario.passw, bcrypt.genSaltSync(10))
+        console.log(usuario.passw)
+        console.log(passwordEncriptado)
+        // res.status(200).send(passwordEncriptado) si se deja ese status ya no procesa el if creado
+
+        usuario.passw = passwordEncriptado
+        usuario.sessionID = req.sessionID
+
+        //alamncear en la db
+        let db = await connectDb()
+        db.collection('usuarios').insertOne(usuario)
+            .then(data => {
+                res.status(200).json({
+                    transaccion: true,
+                    data,
+                    msg: 'guardado nuevo usuario'
+                })
+            })
+            .catch(err =>{
+                res.status(500).json({
+                    transaccion: false,
+                    data: null,
+                    msg: 'usuario nuevo no guardado'
+                })
+            })
+
+        /*let token = jwt.sign({ data: usuario }, process.env.KEY_JWT, {
+            algorithm: 'HS256',
+            expiresIn: parseInt(process.env.TIEMPO)
+        })
+        console.log(token)*/
+
+        res.status(200).json({
+            passw: usuario.passw,
+            //devolver la infomracion
+            //token
+        })
+
+        //token = jwt.sing({data: usuario}, req.sessionID) la calve sera un contrasea difieretne por cada usuario            
+    }
+}
+
+
+let loginUsuario = (req, res) => {
+    let email = req.body.data.email
+    let password = req.body.data.password
+    let token = jwt.sign({ data: usuario }, process.env.KEY_JWT, {
+        algorithm: 'HS256',
+        expiresIn: parseInt(process.env.TIEMPO)
+    })
+    console.log(token)
+    res.status(200).json({
+        passw: usuario.passw,
+        token
+    })
+}
+
 module.exports = {
     prueba,
     getUsuarios,
@@ -261,5 +329,7 @@ module.exports = {
     insertVarios,
     borrarOne,
     updateUser,
-    updateUsers
+    updateUsers,
+    nuevoUsuario,
+    loginUsuario
 }
