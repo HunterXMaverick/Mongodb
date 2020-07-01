@@ -20,7 +20,8 @@ let getUsuarios = async (req, res) => {
             res.status(200).json({
                 transaccion: true,
                 data: data,
-                msg: 'listo'
+                msg: 'listo',
+                token: req.token
             })
         }).catch(err => {
             res.status(500).json({
@@ -250,69 +251,46 @@ let updateUsers = async (req, res) => {
 
 
 let nuevoUsuario = async (req, res) => {
-
     let usuario = req.body.usuario
-
     let db = await connectDb()
-    
     db.collection('usuarios').insertOne(usuario)
-    .then(data => {
-        res.status(200).json({
-            transaccion: true,
-            data,
-            msg: 'guardado nuevo usuario'
+        .then(data => {
+            res.status(200).json({
+                transaccion: true,
+                data,
+                msg: 'usuario ok'
+            })
         })
-    })
-    .catch(err =>{
-        res.status(500).json({
-            transaccion: false,
-            data: null,
-            msg: 'usuario nuevo no guardado'
+        .catch(err => {
+            res.status(500).json({
+                transaccion: false,
+                data: null,
+                msg: 'no se creo el usuario'
+            })
         })
-    })
-
-
-
-    if (!usuario.passw || usuario.passw == '') {
-        res.status(200).send('usuario o password invalido')
-    } else {
-        let passwordEncriptado = bcrypt.hashSync(usuario.passw, bcrypt.genSaltSync(10))
-        console.log(usuario.passw)
-        console.log(passwordEncriptado)
-        // res.status(200).send(passwordEncriptado) si se deja ese status ya no procesa el if creado
-
-        usuario.passw = passwordEncriptado
-        usuario.sessionID = req.sessionID
-
-        //alamncear en la db
-              /*let token = jwt.sign({ data: usuario }, process.env.KEY_JWT, {
-            algorithm: 'HS256',
-            expiresIn: parseInt(process.env.TIEMPO)
-        })
-        console.log(token)*/
-
-        res.status(200).json({
-            passw: usuario.passw,
-            //devolver la infomracion
-            //token
-        })
-
-        //token = jwt.sing({data: usuario}, req.sessionID) la calve sera un contrasea difieretne por cada usuario            
-    }
 }
 
 
 let loginUsuario = (req, res) => {
     let email = req.body.data.email
-    let password = req.body.data.password
+    let passw = req.body.data.passw
+    // email obtenemos los datos del usuario
+    let usuario = {
+        nombre: "Zero",
+        passw: "$2b$10$X3K0Wb7zgZfP6XZtRbqK5e9WPeZ4HUiAEQ6WpsuQ36xzm8cxBqGDa",
+        crearteAt: "2020-07-01T07:51:27.909Z",
+        sessionID: "kxceJUvH-pFKlzvaUg1EPMm_KVfXbjdq",
+        _id: "5efc407fb55b773070756bb0"
+    }
     let token = jwt.sign({ data: usuario }, process.env.KEY_JWT, {
         algorithm: 'HS256',
-        expiresIn: parseInt(process.env.TIEMPO)
+        expiresIn: 60 
     })
     console.log(token)
     res.status(200).json({
         passw: usuario.passw,
         token
+
     })
 }
 
