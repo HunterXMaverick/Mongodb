@@ -34,7 +34,6 @@ let getUsuarios = async (req, res) => {
 
 //metodo Query
 let postmanQuery = (req, res) => {
-
     let nombre = req.query.nombre
     let apellido = req.query.apellido
     let edad = req.query.edad
@@ -56,7 +55,6 @@ let postmanQuery = (req, res) => {
 
 //metodo Params
 let postmanParams = (req, res) => {
-
     let nombre = req.params.nombre
     let apellido = req.params.apellido
     let edad = req.params.edad
@@ -93,7 +91,6 @@ let postmanBody = (req, res) => {
         msg: ''
     })
 }
-
 
 //buscar por id
 let getUserByID = async (req, res) => {
@@ -142,7 +139,6 @@ let getUserName = async (req, res) => {
 }
 
 //instar 1
-
 let insertUser = async (req, res) => {
     let db = await connectDb(),
         data = req.body.data
@@ -165,7 +161,6 @@ let insertUser = async (req, res) => {
 }
 
 //instar varios
-
 let insertVarios = async (req, res) => {
     let db = await connectDb(),
         data = req.body.data
@@ -188,7 +183,6 @@ let insertVarios = async (req, res) => {
 }
 
 //borrar
-
 let borrarOne = async (req, res) => {
     let db = await connectDb(),
         id = parseInt(req.params.id);
@@ -254,8 +248,30 @@ let updateUsers = async (req, res) => {
 
 }
 
+
 let nuevoUsuario = async (req, res) => {
+
     let usuario = req.body.usuario
+
+    let db = await connectDb()
+    
+    db.collection('usuarios').insertOne(usuario)
+    .then(data => {
+        res.status(200).json({
+            transaccion: true,
+            data,
+            msg: 'guardado nuevo usuario'
+        })
+    })
+    .catch(err =>{
+        res.status(500).json({
+            transaccion: false,
+            data: null,
+            msg: 'usuario nuevo no guardado'
+        })
+    })
+
+
 
     if (!usuario.passw || usuario.passw == '') {
         res.status(200).send('usuario o password invalido')
@@ -269,24 +285,7 @@ let nuevoUsuario = async (req, res) => {
         usuario.sessionID = req.sessionID
 
         //alamncear en la db
-        let db = await connectDb()
-        db.collection('usuarios').insertOne(usuario)
-            .then(data => {
-                res.status(200).json({
-                    transaccion: true,
-                    data,
-                    msg: 'guardado nuevo usuario'
-                })
-            })
-            .catch(err =>{
-                res.status(500).json({
-                    transaccion: false,
-                    data: null,
-                    msg: 'usuario nuevo no guardado'
-                })
-            })
-
-        /*let token = jwt.sign({ data: usuario }, process.env.KEY_JWT, {
+              /*let token = jwt.sign({ data: usuario }, process.env.KEY_JWT, {
             algorithm: 'HS256',
             expiresIn: parseInt(process.env.TIEMPO)
         })
