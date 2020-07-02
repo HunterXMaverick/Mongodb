@@ -5,9 +5,10 @@ const env = require('dotenv').config(),
       app = require('./app'),
       port = process.env.PORT || 3000
       
-console.log(process.env)
+let http= require('http').Server(app),
+    io = require('../controles/socket.control')(http)
 
-app.listen(port, (err) => {
+http.listen(port, (err) => {
     if (!err){
         console.log(`El servicio esta funcionando en el puerto http://localhost:${port}`)
     }else {

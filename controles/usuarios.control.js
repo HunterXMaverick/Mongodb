@@ -274,13 +274,15 @@ let nuevoUsuario = async (req, res) => {
 let loginUsuario = (req, res) => {
     let email = req.body.data.email
     let passw = req.body.data.passw
+    let rol = req.body.data.rol
     // email obtenemos los datos del usuario
     let usuario = {
         nombre: "Zero",
         passw: "$2b$10$X3K0Wb7zgZfP6XZtRbqK5e9WPeZ4HUiAEQ6WpsuQ36xzm8cxBqGDa",
         crearteAt: "2020-07-01T07:51:27.909Z",
         sessionID: "kxceJUvH-pFKlzvaUg1EPMm_KVfXbjdq",
-        _id: "5efc407fb55b773070756bb0"
+        _id: "5efc407fb55b773070756bb0",
+        rol: "add"
     }
     let token = jwt.sign({ data: usuario }, process.env.KEY_JWT, {
         algorithm: 'HS256',
