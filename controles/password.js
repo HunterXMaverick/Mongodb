@@ -7,7 +7,7 @@ let codificarPassword = (req, res, next) => {
     let usuario = req.body.usuario || null
     if (!usuario || usuario.passw == '' || !usuario.passw) {
         console.log('usuario no valido')
-        return res.status(200).send('usuario o cotrasena invaldios')
+        return res.status(200).send('usuario o password invaldios')
     } else {
         let codificarPassword = bcrypt.hashSync(usuario.passw, bcrypt.genSaltSync(10))
         if (codificarPassword) {

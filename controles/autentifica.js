@@ -18,7 +18,7 @@ let autentica = (req, res, next) => {
             req.decode = decode
             let token = jwt.sign({ data: decode.data }, process.env.KEY_JWT, {
                 algorithm: 'HS256',
-                expiresIn: 60
+                expiresIn: 600000
             })
             req.token = token
             next()

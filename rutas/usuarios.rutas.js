@@ -20,7 +20,7 @@ api.post('/login', usuarioControl.loginUsuario)
 api.post('/nuevo_usuario', [passwordControl.codificarPassword], usuariosControl.nuevoUsuario)
 
 
-//
+//endPoint de envio de datos
 api.get('/postman_query', usuarioControl.postmanQuery)
 api.get('/postman_params/:nombre/:apellido/:edad', usuarioControl.postmanParams)
 api.post('/postman_body', usuarioControl.postmanBody)

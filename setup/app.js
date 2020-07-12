@@ -47,7 +47,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 //Ejemplos de sesion para verificar
-app.use(function (req, res, next) {
+app.use( (req, res, next) => {
     if (!req.session.views) {
         req.session.views = {}
     }
@@ -61,13 +61,13 @@ app.use(function (req, res, next) {
     next()
 
 })
-
-app.get('/foo', function (req, res, next) {
-    res.send('you  viewed this page' + req.session.views['/foo'] + 'time')
+// si no funciona colclarr enonbre de funcion 
+app.get('/foo', (req, res, next) => {
+    res.send('vista foo' + req.session.views['/foo'] + 'time')
 })
 
-app.get('/prueba1', function (req, res, next) {
-    res.send('you  viewed this page' + req.session.views['/prueba1'] + 'time' + req.sessionID)
+app.get('/prueba1',  (req, res, next) => {
+    res.send('vista prueba1' + req.session.views['/prueba1'] + 'time' + req.sessionID)
 })
 
 

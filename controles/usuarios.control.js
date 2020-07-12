@@ -249,7 +249,8 @@ let updateUsers = async (req, res) => {
 
 }
 
-
+//seguridades
+// creacion de nuevo usuario
 let nuevoUsuario = async (req, res) => {
     let usuario = req.body.usuario
     let db = await connectDb()
@@ -286,7 +287,7 @@ let loginUsuario = (req, res) => {
     }
     let token = jwt.sign({ data: usuario }, process.env.KEY_JWT, {
         algorithm: 'HS256',
-        expiresIn: 60 
+        expiresIn: 600000 
     })
     console.log(token)
     res.status(200).json({
